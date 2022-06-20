@@ -2,7 +2,7 @@ export abstract class QueuedJobsBase<TData, TResult> {
   public queue: { requestId: number, data: TData }[] = []
   protected lastRequestId = 0
   constructor(private maxQueueLength = 50, private timeout = 30000) { }
-  public registerHandler(handleData: (data: TData) => Promise<TResult>) {
+  public registerHandler(handleData: (data: TData, requestId?: number) => Promise<TResult>) {
     let isBusy = false
     this.on('new', async() => {
       if (!isBusy) {
@@ -10,7 +10,7 @@ export abstract class QueuedJobsBase<TData, TResult> {
         let item = this.queue.shift()
         while (item) {
           try {
-            const result = await handleData(item.data)
+            const result = await handleData(item.data, item.requestId)
             this.dispatchEvent(`resolve:${item.requestId}`, result)
           } catch (error: unknown) {
             this.dispatchEvent(`reject:${item.requestId}`, error instanceof Error ? error : new Error(String(error)))
