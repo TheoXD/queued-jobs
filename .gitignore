@@ -60,7 +60,6 @@ typings/
 
 # Source
 .vscode
-**/*.js
 **/*.css
 !*.config.js
 !**/*-*.js
