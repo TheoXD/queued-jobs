@@ -60,7 +60,6 @@ typings/
 
 # Source
 .vscode
-dist
 **/*.js
 **/*.css
 !*.config.js
